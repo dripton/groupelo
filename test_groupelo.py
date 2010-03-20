@@ -1,3 +1,5 @@
+# Run this with py.test or nose
+
 import groupelo
 
 def test_win_expectancy():
