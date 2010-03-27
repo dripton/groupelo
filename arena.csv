@@ -1,62 +1,62 @@
 #fight, armed or unarmed, winner, loser, {loser...}
 #for team matches,  members of a team are separated by &
 #* for each opponent crippled, ! for each opponent killed
-1, armed, Sharznak**, Togashi, Itsuki
-2, unarmed, Grumwot*, Hermann, Mokii
-3, armed, Don Lorenzo*, Grinlock
-4, armed, Dunham!, Dalthan
-5, armed, Togashi, Grumwot
-6, armed, Sharznak, Don Lorenzo
-7, armed, Onyx!, Joachim
-8, armed, Don Lorenzo!, Grumwot
-9, armed, Dunham, Togashi
-10, armed, Mokii, Maurice
-11, armed, Sharznak, Onyx
-12, armed, Bolg-Arg!, Bletto
-13, armed, Don Lorenzo, Kamatari, Maurice*
-14, armed, Mokii, Bolg-Arg
-15, armed, Togashi*, Onyx
-16, armed, Sharznak, Dunham
-17, armed, Bashar!* & Barrington, Mr. White & Garrick*
-18, armed, Sharznak* & Bolg-Arg & Kamatari, Don Lorenzo & Dunham & Mokii
-19, armed, Sharznak & Kamatari & Bashar, Mokii & Don Lorenzo & Bolg-Arg
-20, armed, Gregor, Kargill
-21, armed, Aphasia, Krazzk
-22, armed, Krazzk*, Kargill
-23, armed, Kamatari!, Gregor
-24, armed, Sharznak!*, Mokii
-25, armed, Bashar!, Aphasia
-26, armed, Don Lorenzo!, Bolg-Arg
-27, armed, Morganth, Morgan
-28, armed, Don Lorenzo, Sharznak*, Bashar
-29, unarmed, Krazzk!, Bashar, Kefix, Kamatari, Sharznak, Don Lorenzo
-30, unarmed, Black Jack, Kuuk
-31, unarmed, Sassan*, Morgan*
-32, unarmed, Krazzk**, Black Jack, Kefix
-33, unarmed, Bashar*, Kamatari, Zok-Gzusk
-34, unarmed, Morgan*, Don Lorenzo, Kuuk
-35, armed, Marina, Hallowstone
-36, unarmed, Kamatari, Zok-Gzusk
-37, unarmed, Kefix, Black Jack
-38, unarmed, Don Lorenzo, Kuuk
-39, unarmed, Krazzk*, Bashar, Morgan
-40, armed, Ardri!*, Simon, Zabrunk
-41, armed, Morgan!, Zabrunk
-42, armed, Kamatari*, Krazzk
-43, armed, Hallowstone, Alvin
-44, armed, Don Lorenzo, Marina
-45, armed, Kefix*, Bashar
-46, armed, Zok-Gzusk, Black Jack
-47, armed, Ardri*, Kuuk
-48, armed, Bashar!, Yroth, Alvin
-49, armed, Balthazar, Gamnakka
-50, armed, Morgan, Laurally
-51, armed, Ardri, Hallowstone
-52, armed, Kefix!*, Kamatari
-53, armed, Kuuk, Saravati
-54, armed, Alatrin, Krazzk
-55, armed, Zok-Gzusk, Don Lorenzo
-56, armed, Bashar*, Morgan
-58, armed, Zok-Gzusk*, Kuuk
-62, armed, Wu Xiao, Alvin
-64, armed, Halgan*, Apollodorus
+1, armed, exhibition, Sharznak**, Togashi, Itsuki
+2, unarmed, exhibition, Grumwot*, Hermann, Mokii
+3, armed, exhibition, Don Lorenzo*, Grinlock
+4, armed, tournament, Dunham!, Dalthan
+5, armed, tournament, Togashi, Grumwot
+6, armed, tournament, Sharznak, Don Lorenzo
+7, armed, tournament, Onyx!, Joachim
+8, armed, tournament, Don Lorenzo!, Grumwot
+9, armed, tournament, Dunham, Togashi
+10, armed, exhibition, Mokii, Maurice
+11, armed, tournament, Sharznak, Onyx
+12, armed, exhibition, Bolg-Arg!, Bletto
+13, armed, exhibition, Don Lorenzo, Kamatari, Maurice*
+14, armed, exhibition, Mokii, Bolg-Arg
+15, armed, tournament, Togashi*, Onyx
+16, armed, tournament, Sharznak, Dunham
+17, armed, exhibition, Bashar!* & Barrington, Mr. White & Garrick*
+18, armed, exhibition, Sharznak* & Bolg-Arg & Kamatari, Don Lorenzo & Dunham & Mokii
+19, armed, exhibition, Sharznak & Kamatari & Bashar, Mokii & Don Lorenzo & Bolg-Arg
+20, armed, tournament, Gregor, Kargill
+21, armed, tournament, Aphasia, Krazzk
+22, armed, exhibition, Krazzk*, Kargill
+23, armed, tournament, Kamatari!, Gregor
+24, armed, tournament, Sharznak!*, Mokii
+25, armed, tournament, Bashar!, Aphasia
+26, armed, tournament, Don Lorenzo!, Bolg-Arg
+27, armed, exhibition, Morganth, Morgan
+28, armed, tournament, Don Lorenzo, Sharznak*, Bashar
+29, unarmed, exhibition, Krazzk!, Bashar, Kefix, Kamatari, Sharznak, Don Lorenzo
+30, unarmed, tournament, Black Jack, Kuuk
+31, unarmed, tournament, Sassan*, Morgan*
+32, unarmed, tournament, Krazzk**, Black Jack, Kefix
+33, unarmed, tournament, Bashar*, Kamatari, Zok-Gzusk
+34, unarmed, tournament, Morgan*, Don Lorenzo, Kuuk
+35, armed, exhibition, Marina, Hallowstone
+36, unarmed, exhibition, Kamatari, Zok-Gzusk
+37, unarmed, exhibition, Kefix, Black Jack
+38, unarmed, exhibition, Don Lorenzo, Kuuk
+39, unarmed, tournament, Krazzk*, Bashar, Morgan
+40, armed, exhibition, Ardri!*, Simon, Zabrunk
+41, armed, exhibition, Morgan!, Zabrunk
+42, armed, exhibition, Kamatari*, Krazzk
+43, armed, exhibition, Hallowstone, Alvin
+44, armed, exhibition, Don Lorenzo, Marina
+45, armed, exhibition, Kefix*, Bashar
+46, armed, exhibition, Zok-Gzusk, Black Jack
+47, armed, exhibition, Ardri*, Kuuk
+48, armed, tournament, Bashar!, Yroth, Alvin
+49, armed, tournament, Balthazar, Gamnakka
+50, armed, tournament, Morgan, Laurally
+51, armed, tournament, Ardri, Hallowstone
+52, armed, tournament, Kefix!*, Kamatari
+53, armed, tournament, Kuuk, Saravati
+54, armed, tournament, Alatrin, Krazzk
+55, armed, tournament, Zok-Gzusk, Don Lorenzo
+56, armed, tournament, Bashar*, Morgan
+58, armed, tournament, Zok-Gzusk*, Kuuk
+62, armed, exhibition, Wu Xiao, Alvin
+64, armed, exhibition, Halgan*, Apollodorus

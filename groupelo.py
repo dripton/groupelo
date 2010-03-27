@@ -99,8 +99,9 @@ class Elo(object):
         assert len(parts) >= 4
         game_id = parts[0].strip()
         armed_unarmed = parts[1].strip()
-        winners = [parts[2]]
-        losers = parts[3:]
+        tournament_exhibition = parts[2].strip()
+        winners = [parts[3]]
+        losers = parts[4:]
         winner_lists = explode(winners)
         loser_lists = explode(losers)
 
@@ -114,17 +115,17 @@ class Elo(object):
             if len(winner_lists[0]) > 1 or len(loser_lists) > 1:
                 return
         elif self.category == "armed":
-            if armed_unarmed != "armed":
+            if armed_unarmed != self.category:
                 return
         elif self.category == "unarmed":
-            if armed_unarmed != "unarmed":
+            if armed_unarmed != self.category:
                 return
         elif self.category == "tournament":
-            # TODO
-            pass
+            if tournament_exhibition != self.category:
+                return
         elif self.category == "exhibition":
-            # TODO
-            pass
+            if tournament_exhibition != self.category:
+                return
 
         # name: change in rating
         deltas = defaultdict(int)
