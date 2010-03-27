@@ -33,6 +33,17 @@ STARTING_RATING = 1500
 def constant_factory(value):
     return itertools.repeat(value).next
 
+# name: rating
+ratings = defaultdict(constant_factory(STARTING_RATING))
+# name: number of wins
+wins = defaultdict(int)
+# name: number of losses
+losses = defaultdict(int)
+# name: number of killings
+killings = defaultdict(int)
+# name: number of maimings
+maimings = defaultdict(int)
+
 def explode(li):
     """Convert a list of strings into a list of lists of strings.
 
@@ -60,28 +71,54 @@ def rating_delta(r1, r2, w):
     we = win_expectancy(r1, r2)
     return k * (w - we)
 
-def process(line, ratings):
+def bare_name(name):
+    """Return name without any trailing '*' or '!' characters."""
+    while name and (name[-1] == "*" or name[-1] == "!"):
+        name = name[:-1]
+    return name
+
+def process(line):
     """Process a line denoting one match, and return an updated ratings
     dictionary."""
-    ratings = ratings.copy()
+    global ratings
     line = line.strip()
     if not line or line.startswith("#"):
         return ratings
     parts = line.split(",")
-    assert len(parts) >= 3
+    assert len(parts) >= 4
     game_id = parts[0]
-    winners = [parts[1]]
-    losers = parts[2:]
+    game_type = parts[1]
+    winners = [parts[2]]
+    losers = parts[3:]
     winner_lists = explode(winners)
     loser_lists = explode(losers)
 
     # name: change in rating
     deltas = defaultdict(int)
+
+    for winner_list in winner_lists:
+        for winner in winner_list:
+            name = bare_name(winner)
+            wins[name] += 1
+            killings[name] += winner.count("!")
+            maimings[name] += winner.count("*")
+    for loser_list in loser_lists:
+        for loser in loser_list:
+            name = bare_name(loser)
+            losses[name] += 1
+            killings[name] += loser.count("!")
+            maimings[name] += loser.count("*")
+
     for ii, loser_list in enumerate(loser_lists):
         for loser in loser_list:
+            while loser and (loser[-1] == "*" or loser[-1] == "!"):
+                loser = loser[:-1]
             opponent_count = 0
             for winner_list in winner_lists:
                 for winner in winner_list:
+                    while winner and (winner.endswith("*") or
+                      winner.endswith("!")):
+                        winner = winner[:-1]
                     opponent_count += 1
                     wr = ratings[winner]
                     lr = ratings[loser]
@@ -92,6 +129,9 @@ def process(line, ratings):
             for jj in xrange(ii + 1, len(loser_lists)):
                 loser_list2 = loser_lists[jj]
                 for loser2 in loser_list2:
+                    while loser2 and (loser2.endswith("*") or
+                      loser2.endswith("!")):
+                        loser2 = loser2[:-1]
                     opponent_count += 1
                     r1 = ratings[loser]
                     r2 = ratings[loser2]
@@ -103,7 +143,6 @@ def process(line, ratings):
         adjusted_deltas[key] = value / opponent_count
     for name, delta in adjusted_deltas.iteritems():
         ratings[name] += delta
-    return ratings
 
 def main():
     if len(sys.argv) > 1:
@@ -111,17 +150,15 @@ def main():
         fil = open(fn)
     else:
         fil = sys.stdin
-
-    # name: rating
-    ratings = defaultdict(constant_factory(STARTING_RATING))
-
     for line in fil:
-        ratings = process(line, ratings)
+        process(line)
     sorted_ratings = sorted((
       (rating, name) for name, rating in ratings.iteritems()),
       reverse=True)
+    print "Overall"
     for rating, name in sorted_ratings:
-        print "%.3f %s" % (rating, name)
+        print "%.3f %s (%d-%d) %dk, %dm" % (rating, name,
+          wins[name], losses[name], killings[name], maimings[name])
 
 if __name__ == "__main__":
     main()
