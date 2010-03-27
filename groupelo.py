@@ -29,20 +29,15 @@ import itertools
 from collections import defaultdict
 
 STARTING_RATING = 1500
+CATEGORIES = [
+    "overall",
+    "group", "individual",
+    "armed", "unarmed",
+    "tournament", "exhibition",
+]
 
 def constant_factory(value):
     return itertools.repeat(value).next
-
-# name: rating
-ratings = defaultdict(constant_factory(STARTING_RATING))
-# name: number of wins
-wins = defaultdict(int)
-# name: number of losses
-losses = defaultdict(int)
-# name: number of killings
-killings = defaultdict(int)
-# name: number of maimings
-maimings = defaultdict(int)
 
 def explode(li):
     """Convert a list of strings into a list of lists of strings.
@@ -77,72 +72,127 @@ def bare_name(name):
         name = name[:-1]
     return name
 
-def process(line):
-    """Process a line denoting one match, and return an updated ratings
-    dictionary."""
-    global ratings
-    line = line.strip()
-    if not line or line.startswith("#"):
-        return ratings
-    parts = line.split(",")
-    assert len(parts) >= 4
-    game_id = parts[0]
-    game_type = parts[1]
-    winners = [parts[2]]
-    losers = parts[3:]
-    winner_lists = explode(winners)
-    loser_lists = explode(losers)
 
-    # name: change in rating
-    deltas = defaultdict(int)
+class Elo(object):
+    def __init__(self, category, lines):
+        assert category in CATEGORIES
+        self.category = category
+        self.lines = lines
 
-    for winner_list in winner_lists:
-        for winner in winner_list:
-            name = bare_name(winner)
-            wins[name] += 1
-            killings[name] += winner.count("!")
-            maimings[name] += winner.count("*")
-    for loser_list in loser_lists:
-        for loser in loser_list:
-            name = bare_name(loser)
-            losses[name] += 1
-            killings[name] += loser.count("!")
-            maimings[name] += loser.count("*")
+        # name: rating
+        self.ratings = defaultdict(constant_factory(STARTING_RATING))
+        # name: number of wins
+        self.wins = defaultdict(int)
+        # name: number of losses
+        self.losses = defaultdict(int)
+        # name: number of killings
+        self.killings = defaultdict(int)
+        # name: number of maimings
+        self.maimings = defaultdict(int)
 
-    for ii, loser_list in enumerate(loser_lists):
-        for loser in loser_list:
-            while loser and (loser[-1] == "*" or loser[-1] == "!"):
-                loser = loser[:-1]
-            opponent_count = 0
-            for winner_list in winner_lists:
-                for winner in winner_list:
-                    while winner and (winner.endswith("*") or
-                      winner.endswith("!")):
-                        winner = winner[:-1]
-                    opponent_count += 1
-                    wr = ratings[winner]
-                    lr = ratings[loser]
-                    delta = rating_delta(wr, lr, 1)
-                    deltas[winner] += delta
-                    deltas[loser] -= delta
-            # Only the losers after this one, to avoid double-counting.
-            for jj in xrange(ii + 1, len(loser_lists)):
-                loser_list2 = loser_lists[jj]
-                for loser2 in loser_list2:
-                    while loser2 and (loser2.endswith("*") or
-                      loser2.endswith("!")):
-                        loser2 = loser2[:-1]
-                    opponent_count += 1
-                    r1 = ratings[loser]
-                    r2 = ratings[loser2]
-                    delta = rating_delta(r1, r2, 0.5)
-                    deltas[loser] += delta
-                    deltas[loser2] -= delta
-    adjusted_deltas = {}
-    for key, value in deltas.iteritems():
-        adjusted_deltas[key] = value / opponent_count
-    for name, delta in adjusted_deltas.iteritems():
-        ratings[name] += delta
+    def process(self, line):
+        """Process a line denoting one match, and update the ratings."""
+        line = line.strip()
+        if not line or line.startswith("#"):
+            return
+        parts = line.split(",")
+        assert len(parts) >= 4
+        game_id = parts[0].strip()
+        armed_unarmed = parts[1].strip()
+        winners = [parts[2]]
+        losers = parts[3:]
+        winner_lists = explode(winners)
+        loser_lists = explode(losers)
+
+        # Filter out results for the wrong category of fight
+        if self.category == "overall":
+            pass
+        elif self.category == "group":
+            if len(winner_lists[0]) == 1 and len(loser_lists) == 1:
+                return
+        elif self.category == "individual":
+            if len(winner_lists[0]) > 1 or len(loser_lists) > 1:
+                return
+        elif self.category == "armed":
+            if armed_unarmed != "armed":
+                return
+        elif self.category == "unarmed":
+            if armed_unarmed != "unarmed":
+                return
+        elif self.category == "tournament":
+            # TODO
+            pass
+        elif self.category == "exhibition":
+            # TODO
+            pass
+
+        # name: change in rating
+        deltas = defaultdict(int)
+
+        for winner_list in winner_lists:
+            for winner in winner_list:
+                name = bare_name(winner)
+                self.wins[name] += 1
+                self.killings[name] += winner.count("!")
+                self.maimings[name] += winner.count("*")
+        for loser_list in loser_lists:
+            for loser in loser_list:
+                name = bare_name(loser)
+                self.losses[name] += 1
+                self.killings[name] += loser.count("!")
+                self.maimings[name] += loser.count("*")
+
+        for ii, loser_list in enumerate(loser_lists):
+            for loser in loser_list:
+                while loser and (loser[-1] == "*" or loser[-1] == "!"):
+                    loser = loser[:-1]
+                opponent_count = 0
+                for winner_list in winner_lists:
+                    for winner in winner_list:
+                        while winner and (winner.endswith("*") or
+                          winner.endswith("!")):
+                            winner = winner[:-1]
+                        opponent_count += 1
+                        wr = self.ratings[winner]
+                        lr = self.ratings[loser]
+                        delta = rating_delta(wr, lr, 1)
+                        deltas[winner] += delta
+                        deltas[loser] -= delta
+                # Only the losers after this one, to avoid double-counting.
+                for jj in xrange(ii + 1, len(loser_lists)):
+                    loser_list2 = loser_lists[jj]
+                    for loser2 in loser_list2:
+                        while loser2 and (loser2.endswith("*") or
+                          loser2.endswith("!")):
+                            loser2 = loser2[:-1]
+                        opponent_count += 1
+                        r1 = self.ratings[loser]
+                        r2 = self.ratings[loser2]
+                        delta = rating_delta(r1, r2, 0.5)
+                        deltas[loser] += delta
+                        deltas[loser2] -= delta
+        adjusted_deltas = {}
+        for key, value in deltas.iteritems():
+            adjusted_deltas[key] = value / opponent_count
+        for name, delta in adjusted_deltas.iteritems():
+            self.ratings[name] += delta
+
+    def process_all(self):
+        """Process all lines."""
+        for line in self.lines:
+            self.process(line)
+
+    def output(self):
+        sorted_ratings = sorted((
+          (rating, name) for name, rating in self.ratings.iteritems()),
+          reverse=True)
+        print self.category
+        for rating, name in sorted_ratings:
+            print "%.3f %s (%d-%d) %dk, %dm" % (rating, name,
+              self.wins[name], self.losses[name], self.killings[name],
+              self.maimings[name])
+        print
+
 
 def main():
     if len(sys.argv) > 1:
@@ -150,15 +200,14 @@ def main():
         fil = open(fn)
     else:
         fil = sys.stdin
-    for line in fil:
-        process(line)
-    sorted_ratings = sorted((
-      (rating, name) for name, rating in ratings.iteritems()),
-      reverse=True)
-    print "Overall"
-    for rating, name in sorted_ratings:
-        print "%.3f %s (%d-%d) %dk, %dm" % (rating, name,
-          wins[name], losses[name], killings[name], maimings[name])
+    bytes = fil.read()
+    fil.close()
+    lines = bytes.split("\n")
+    for category in CATEGORIES:
+        elo = Elo(category, lines)
+        elo.process_all()
+        elo.output()
+
 
 if __name__ == "__main__":
     main()
