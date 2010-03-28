@@ -19,6 +19,8 @@ where delta is the difference in ratings
 For N players, assume each player played a game against
 each of his opponents.  But reduce K so that multiplayer
 matches count the same as 2-player matches.
+
+We add 1 point per match, for "anti-deflation"
 """
 
 __copyright__ = "Copyright 2010 David Ripton"
@@ -29,6 +31,7 @@ import itertools
 from collections import defaultdict
 
 STARTING_RATING = 1500
+ANTI_DEFLATION = 1
 CATEGORIES = [
     "overall",
     "group", "solo",
@@ -176,7 +179,7 @@ class Elo(object):
         for key, value in deltas.iteritems():
             adjusted_deltas[key] = value / opponent_count
         for name, delta in adjusted_deltas.iteritems():
-            self.ratings[name] += delta
+            self.ratings[name] += delta + ANTI_DEFLATION
 
     def process_all(self):
         """Process all lines."""
