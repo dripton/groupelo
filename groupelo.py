@@ -31,7 +31,7 @@ from collections import defaultdict
 STARTING_RATING = 1500
 CATEGORIES = [
     "overall",
-    "group", "individual",
+    "group", "solo",
     "armed", "unarmed",
     "tournament", "exhibition",
 ]
@@ -111,7 +111,7 @@ class Elo(object):
         elif self.category == "group":
             if len(winner_lists[0]) == 1 and len(loser_lists) == 1:
                 return
-        elif self.category == "individual":
+        elif self.category == "solo":
             if len(winner_lists[0]) > 1 or len(loser_lists) > 1:
                 return
         elif self.category == "armed":
