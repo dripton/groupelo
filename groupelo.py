@@ -146,17 +146,17 @@ class Elo(object):
                 self.killings[name] += loser.count("!")
                 self.maimings[name] += loser.count("*")
 
+        opponent_count = 0
+        for loser_list in loser_lists:
+            for loser in loser_list:
+                opponent_count += 1
+
         for ii, loser_list in enumerate(loser_lists):
             for loser in loser_list:
-                while loser and (loser[-1] == "*" or loser[-1] == "!"):
-                    loser = loser[:-1]
-                opponent_count = 0
+                loser = bare_name(loser)
                 for winner_list in winner_lists:
                     for winner in winner_list:
-                        while winner and (winner.endswith("*") or
-                          winner.endswith("!")):
-                            winner = winner[:-1]
-                        opponent_count += 1
+                        winner = bare_name(winner)
                         wr = self.ratings[winner]
                         lr = self.ratings[loser]
                         delta = rating_delta(wr, lr, 1)
@@ -166,10 +166,7 @@ class Elo(object):
                 for jj in xrange(ii + 1, len(loser_lists)):
                     loser_list2 = loser_lists[jj]
                     for loser2 in loser_list2:
-                        while loser2 and (loser2.endswith("*") or
-                          loser2.endswith("!")):
-                            loser2 = loser2[:-1]
-                        opponent_count += 1
+                        loser2 = bare_name(loser2)
                         r1 = self.ratings[loser]
                         r2 = self.ratings[loser2]
                         delta = rating_delta(r1, r2, 0.5)
