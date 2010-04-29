@@ -151,6 +151,12 @@ class Elo(object):
             for loser in loser_list:
                 opponent_count += 1
 
+        # Assumes all teams have the same number of players.
+        ally_count = -1
+        for winner_list in winner_lists:
+            for winner in winner_list:
+                ally_count += 1
+
         for ii, loser_list in enumerate(loser_lists):
             for loser in loser_list:
                 loser = bare_name(loser)
@@ -174,7 +180,10 @@ class Elo(object):
                         deltas[loser2] -= delta
         adjusted_deltas = {}
         for key, value in deltas.iteritems():
-            adjusted_deltas[key] = value / opponent_count
+            if ally_count == 0:
+                adjusted_deltas[key] = value / opponent_count ** 0.5
+            else:
+                adjusted_deltas[key] = value / opponent_count
         for name, delta in adjusted_deltas.iteritems():
             self.ratings[name] += delta + ANTI_DEFLATION
 
