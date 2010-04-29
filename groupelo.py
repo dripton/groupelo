@@ -88,10 +88,6 @@ class Elo(object):
         self.wins = defaultdict(int)
         # name: number of losses
         self.losses = defaultdict(int)
-        # name: number of killings
-        self.killings = defaultdict(int)
-        # name: number of maimings
-        self.maimings = defaultdict(int)
 
     def process(self, line):
         """Process a line denoting one match, and update the ratings."""
@@ -137,14 +133,10 @@ class Elo(object):
             for winner in winner_list:
                 name = bare_name(winner)
                 self.wins[name] += 1
-                self.killings[name] += winner.count("!")
-                self.maimings[name] += winner.count("*")
         for loser_list in loser_lists:
             for loser in loser_list:
                 name = bare_name(loser)
                 self.losses[name] += 1
-                self.killings[name] += loser.count("!")
-                self.maimings[name] += loser.count("*")
 
         opponent_count = 0
         for loser_list in loser_lists:
@@ -198,9 +190,8 @@ class Elo(object):
           reverse=True)
         print self.category
         for rating, name in sorted_ratings:
-            print "%.3f %s (%d-%d) %dk, %dm" % (rating, name,
-              self.wins[name], self.losses[name], self.killings[name],
-              self.maimings[name])
+            print "%.3f %s (%d-%d)" % (rating, name,
+              self.wins[name], self.losses[name])
         print
 
 
